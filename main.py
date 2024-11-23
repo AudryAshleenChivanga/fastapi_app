@@ -20,12 +20,13 @@ def load_model():
 
 model = load_model()
 
-@app.get("/")
+@app.get("/", include_in_schema=False)
+@app.head("/")
 def read_root():
     return {"message": "Welcome to the Insurance Prediction API"}
 
-@app.post("/predict/")
+@app.post("/predict")
 def predict(input_data: PredictionInput):
     data = pd.DataFrame([input_data.dict()])
-    prediction = model.predict(data)[0]
-    return {"predicted_insurance_cost": prediction}
+    prediction = model.predict(data)
+    return {"prediction": prediction[0]}
